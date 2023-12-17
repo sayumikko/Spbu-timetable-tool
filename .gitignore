@@ -1,0 +1,6 @@
+*.xlsx
+*.xls
+
+bin/
+obj/
+.config/
