@@ -6,6 +6,7 @@
   <ItemGroup>
     <Compile Include="LoadParser.fs" />
     <Compile Include="TeacherPreferences.fs" />
+    <Compile Include="TeacherPreferencesPP.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
