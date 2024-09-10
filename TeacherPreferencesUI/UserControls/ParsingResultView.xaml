@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="TeacherPreferencesUI.UserControls.ParsingResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             xmlns:conv="clr-namespace:TeacherPreferencesUI.Converters" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <conv:ZeroToCollapsedConverter x:Key="ZeroToCollapsedConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="#F2E8C9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" x:Name="NoErrorsTextBlock" 
+                   Text="Расписание соответствует пожеланиям преподавателей" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center" 
+                   Visibility="{Binding ValidationResult.Count, Converter={StaticResource ZeroToCollapsedConverter}, ConverterParameter=True}" />
+
+        <!-- Обернули ListView в ScrollViewer для вертикальной прокрутки -->
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ListView x:Name="ValidationResultList" 
+                      Background="#F6EFD7" Margin="10" 
+                      ItemsSource="{Binding ValidationResult}" 
+                      Visibility="{Binding ValidationResult.Count, Converter={StaticResource ZeroToCollapsedConverter}}" 
+                      VirtualizingStackPanel.IsVirtualizing="True" 
+                      VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="10"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+            <Button Style="{StaticResource RoundedButton}" Content="Назад" Command="{Binding ErrorBackCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

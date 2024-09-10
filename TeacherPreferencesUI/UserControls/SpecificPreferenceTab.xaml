@@ -1,0 +1,197 @@
+﻿<UserControl x:Class="TeacherPreferencesUI.UserControls.SpecificPreferenceTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPreferencesUI.UserControls"
+             xmlns:conv="clr-namespace:TeacherPreferencesUI.Converters"
+             xmlns:vm="clr-namespace:TeacherPreferencesUI.ViewModels.SpecificPreferenceViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <conv:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+        <conv:CapacityToVisibilityConverter x:Key="CapacityToVisibilityConverter"/>
+        <conv:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="#F6EFD7">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding SelectedTeacher.Courses}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Margin="5">
+                            <Expander.Header>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}, {1}, {2}">
+                                            <Binding Path="SubjectName"/>
+                                            <Binding Path="Group"/>
+                                            <Binding Path="ClassType" Converter="{StaticResource EnumDescriptionConverter}"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Expander.Header>
+                            
+                            <StackPanel>
+                                <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Vertical">
+                                    <TextBlock Text="Группа"/>
+                                    <TextBox Text="{Binding Group}" Margin="5" />
+
+                                    <TextBlock Text="Название предмета"/>
+                                    <TextBox Text="{Binding SubjectName}" Margin="5" />
+
+                                    <TextBlock Text="Тип занятия"/>
+                                    <ComboBox SelectedItem="{Binding ClassType, UpdateSourceTrigger=PropertyChanged}" 
+                                              Margin="5"
+                                              ItemsSource="{Binding Source={x:Static conv:EnumSource.ClassTypes}}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <Expander Header="Аудитории" Margin="5">
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding Audiences}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                                        <TextBox Width="30" Text="{Binding Number}" Margin="5"/>
+                                                        <ComboBox SelectedItem="{Binding Priority}" Margin="5"
+                                                            ItemsSource="{Binding Source={x:Static conv:EnumSource.Priorities}}">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                        <Button Content="Удалить" 
+                                                            Command="{Binding DataContext.DeleteAudienceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                                            CommandParameter="{Binding}" 
+                                                            Margin="5"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+
+                                        <Button Content="Добавить аудиторию" 
+                                            Command="{Binding DataContext.AddAudienceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                            CommandParameter="{Binding}" Margin="5"/>
+                                    </StackPanel>
+                                </Expander>
+
+                                <Expander Header="Оборудование" Margin="5">
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding AudienceEquipments}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                                        <ComboBox SelectedItem="{Binding EquipmentType, UpdateSourceTrigger=PropertyChanged}" 
+                                                                  Margin="5"
+                                                                  ItemsSource="{Binding Source={x:Static conv:EnumSource.AudienceEquipmentTypes}}">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                        <TextBox Margin="5" Width="30" 
+                                                                Text="{Binding IntValue, UpdateSourceTrigger=PropertyChanged}"
+                                                                Visibility="{Binding EquipmentType, 
+                                                                    Converter={StaticResource CapacityToVisibilityConverter}}"/>
+                                                        <ComboBox SelectedItem="{Binding Priority}" Margin="5"
+                                                                ItemsSource="{Binding Source={x:Static conv:EnumSource.Priorities}}">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                        <Button Content="Удалить" 
+                                                                Command="{Binding DataContext.DeleteAudienceEquipCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Margin="5"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+
+                                        <Button Content="Добавить оборудование" 
+                                            Command="{Binding DataContext.AddAudienceEquipCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                            CommandParameter="{Binding}" Margin="5"/>
+                                    </StackPanel>
+                                </Expander>
+
+                                <ItemsControl ItemsSource="{Binding SpecificPreferences}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <StackPanel Orientation="Horizontal" Margin="10">
+                                                    <ComboBox SelectedItem="{Binding SpecificPreferenceType, UpdateSourceTrigger=PropertyChanged}"
+                                                              ItemsSource="{Binding Source={x:Static conv:EnumSource.SpecificPreferenceTypes}}"
+                                                              Margin="5,0" Width="200">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+
+                                                    <ComboBox SelectedItem="{Binding Priority, UpdateSourceTrigger=PropertyChanged}"
+                                                              ItemsSource="{Binding Source={x:Static conv:EnumSource.Priorities}}"
+                                                              Margin="5,0" Width="200">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+
+                                                    <Button Content="Удалить"
+                                                        Command="{Binding DataContext.DeleteSpecificPreferenceCommand, 
+                                                            RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                                    <Button Style="{StaticResource RoundedButton}"  
+                                            Content="Изменить информацию о курсе" 
+                                            Command="{Binding EditCommand}"
+                                            Margin="5"
+                                            Visibility="{Binding IsEditing, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                                    <Button Style="{StaticResource RoundedButton}"  
+                                            Content="Добавить пожелание" 
+                                            Command="{Binding DataContext.AddDefaultSpecificPreference, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Margin="5"
+                                            Visibility="{Binding IsEditing, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                                    <Button Style="{StaticResource RoundedButton}"  
+                                            Content="Сохранить информацию о курсе" 
+                                            Command="{Binding SaveCommand}"
+                                            Margin="5"
+                                            Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                    <Button Style="{StaticResource RoundedButton}"  
+                                        Content="Удалить курс" 
+                                        Command="{Binding DataContext.DeleteCourseCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Margin="5"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

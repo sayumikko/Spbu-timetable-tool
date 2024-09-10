@@ -45,8 +45,10 @@ let parseCourseCodeAndName (row: IRow) =
         pipe2 (manyMinMaxSatisfy 6 6 (isDigit)) (spaces >>. restOfLine false) (fun number title -> number, title)
 
     match run courseParser course with
-    | Success(result, _, _) -> result
-    | _ -> raise <| new System.Exception("Неверный формат записи кода и названия курса")
+    | Success (result, _, _) -> result
+    | _ ->
+        raise
+        <| new System.Exception("Неверный формат записи кода и названия курса")
 
 
 let groupPattern = @"\d{2}\.[СБМ]\d{2}-мм"
@@ -61,7 +63,9 @@ let rec groupFromCurricula groups acc =
         match group with
         | (year, curriculum) ->
             match List.tryFind (fun (curriculumNumber, _) -> curriculumNumber = curriculum) curricula with
-            | Some(_, g) -> List.map (fun x -> String.Concat(string year, ".", x, "-мм")) g @ acc
+            | Some (_, g) ->
+                List.map (fun x -> String.Concat(string year, ".", x, "-мм")) g
+                @ acc
             | None -> groupFromCurricula tl acc
     | [] -> acc
 
@@ -71,8 +75,10 @@ let parseCurriculum (curriculum) =
 
     let curriculum =
         match run (sepBy1 curriculumParser (pchar ',' .>> spaces)) curriculum with
-        | Success(res, _, _) -> groupFromCurricula res []
-        | _ -> raise <| new System.Exception("Неверный формат записи учебного плана")
+        | Success (res, _, _) -> groupFromCurricula res []
+        | _ ->
+            raise
+            <| new System.Exception("Неверный формат записи учебного плана")
 
     curriculum
 
@@ -106,8 +112,10 @@ let parseSemester (row: IRow) =
         pipe2 (pstring "Семестр" >>. spaces) (pint32) (fun _ number -> number)
 
     match run semesterParser semester with
-    | Success(result, _, _) -> result
-    | _ -> raise <| new System.Exception("Неверный формат указания семестра")
+    | Success (result, _, _) -> result
+    | _ ->
+        raise
+        <| new System.Exception("Неверный формат указания семестра")
 
 
 let parseTeacher (row: IRow) =
@@ -116,8 +124,10 @@ let parseTeacher (row: IRow) =
     let teacherParser = manyTill anyChar (pchar ',')
 
     match run teacherParser teacher with
-    | Success(result, _, _) -> System.String.Concat(result)
-    | _ -> raise <| new System.Exception("Неверный формат записи имени преподавателя")
+    | Success (result, _, _) -> System.String.Concat(result)
+    | _ ->
+        raise
+        <| new System.Exception("Неверный формат записи имени преподавателя")
 
 let parseAcademicHours (row: IRow) =
     let teacher = row.GetCell(11).ToString()
@@ -125,7 +135,9 @@ let parseAcademicHours (row: IRow) =
 
     match Int32.TryParse(teacher, &intValue) with
     | true -> intValue
-    | false -> raise <| new System.Exception("Неверный формат записи академических часов")
+    | false ->
+        raise
+        <| new System.Exception("Неверный формат записи академических часов")
 
 let parseCourse (row: IRow) =
     let semester = parseSemester row
@@ -175,7 +187,8 @@ let readExcelFile (workbook: XSSFWorkbook) =
             let course =
                 try
                     parseCourse row
-                with _ as ex ->
+                with
+                | _ as ex ->
                     printfn "Ошибка в строке %d: %s" rowIndex ex.Message
                     exit -2
 

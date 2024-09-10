@@ -1,0 +1,79 @@
+﻿<Window x:Class="TeacherPreferencesUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TeacherPreferencesUI.UserControls"
+        xmlns:conv="clr-namespace:TeacherPreferencesUI.Converters"
+        Title="MainWindow" Height="600" Width="1000">
+
+    <Window.Resources>
+        <conv:DepartmentConverter x:Key="DepartmentConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <conv:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#F6EFD7">
+            <ContentControl Content="{Binding CurrentView}" Background="#F6EFD7"/>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Viewbox Grid.Row="0">
+                <Border Background="#F2E8C9">
+                    <TextBlock Margin="3" Text="Список преподавателей" />
+                </Border>
+            </Viewbox>
+
+            <ScrollViewer Grid.Row="1" Background="#F2E8C9" VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding SortedTeachers}" 
+                     Background="#F2E8C9" 
+                     PreviewMouseWheel="ListBox_PreviewMouseWheel" 
+                     SelectedItem="{Binding SelectedTeacher}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding FullName}"/>
+                                <TextBlock Text="{Binding Department, Converter={StaticResource DepartmentConverter}}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </ScrollViewer>
+
+
+            <Border Background="#F2E8C9" Grid.Row="2" Height="40">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Style="{StaticResource RoundedButton}" 
+                        Content="Добавить преподавателя" 
+                        Command="{Binding AddCommand}" 
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" 
+                        MinWidth="100"/>
+
+                    <Button Style="{StaticResource RoundedButton}" 
+                        Content="Удалить" 
+                        Command="{Binding DeleteCommand}" 
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                        MinWidth="100"/>
+
+                    <Button Style="{StaticResource RoundedButton}" 
+                        Content="Отмена" 
+                        Command="{Binding BackCommand}" 
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                        MinWidth="100"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

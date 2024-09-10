@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="TeacherPreferencesUI.UserControls.TeacherPreferenceUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPreferencesUI.UserControls"
+             xmlns:conv="clr-namespace:TeacherPreferencesUI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <conv:TabIndexToVisibilityConverter x:Key="TabIndexToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="#F6EFD7" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="{Binding SelectedTeacher.FullName}" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontWeight="Bold" FontSize="24" Margin="0,0,0,10"/>
+
+        <TabControl x:Name="PreferencesTabControl" Grid.Row="1" Grid.ColumnSpan="2">
+            <TabItem Header="Общие пожелания">
+                <TabItem.ContentTemplate>
+                    <DataTemplate>
+                        <local:GeneralPreferencesTab DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    </DataTemplate>
+                </TabItem.ContentTemplate>
+            </TabItem>
+
+            <TabItem Header="Пожелания по курсам">
+                <TabItem.ContentTemplate>
+                    <DataTemplate>
+                        <local:SpecificPreferenceTab DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    </DataTemplate>
+                </TabItem.ContentTemplate>
+            </TabItem>
+        </TabControl>
+
+        <Border Background="#F2E8C9" Grid.ColumnSpan="2" Grid.Row="2" Height="40">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                <Button Content="Добавить предпочтение" 
+                    Height="30" 
+                    Style="{StaticResource RoundedButton}" 
+                    Command="{Binding AddDefaultPreferenceCommand}">
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource TabIndexToVisibilityConverter}" ConverterParameter="AddPreference">
+                            <Binding ElementName="PreferencesTabControl" Path="SelectedIndex" />
+                        </MultiBinding>
+                    </Button.Visibility>
+                </Button>
+
+                <Button Content="Добавить курс" Height="30" Style="{StaticResource RoundedButton}" Command="{Binding AddCourseCommand}">
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource TabIndexToVisibilityConverter}" ConverterParameter="AddCourse">
+                            <Binding ElementName="PreferencesTabControl" Path="SelectedIndex" />
+                        </MultiBinding>
+                    </Button.Visibility>
+                </Button>
+
+                <Button Content="Сохранить"
+                    Height="30"
+                    Style="{StaticResource RoundedButton}"
+                    Command="{Binding SavePreferencesCommand}">
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource TabIndexToVisibilityConverter}" ConverterParameter="Save">
+                            <Binding ElementName="PreferencesTabControl" Path="SelectedIndex" />
+                        </MultiBinding>
+                    </Button.Visibility>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

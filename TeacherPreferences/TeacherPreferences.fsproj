@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>                          
+    <Compile Include="TeacherPreferences.fs" />
+	<Compile Include="AppContextMapper.fs" />    
+    <Compile Include="TeacherPreferencesPP.fs" />
+	<Compile Include="GeneralPreferencesValidation.fs" />
+	<Compile Include="SpecificPreferencesValidation.fs" />
+	<Compile Include="TimePreferencesValidation.fs" />
+	<Compile Include="PreferencesValidation.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExcelTimetableParser\ExcelTimetableParser.fsproj" />
+    <ProjectReference Include="..\TeacherPreferencesDataModel\TeacherPreferencesDataModel.csproj">
+      <TreatAsUsed>true</TreatAsUsed>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
