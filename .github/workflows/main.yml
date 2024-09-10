@@ -20,7 +20,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Run C# linter (dotnet format)
-      run: dotnet format --check
+      run: dotnet-format --check
     - name: Install Fantomas (F# linter)
       run: dotnet tool install -g fantomas-tool
     - name: Run F# linter (Fantomas)
