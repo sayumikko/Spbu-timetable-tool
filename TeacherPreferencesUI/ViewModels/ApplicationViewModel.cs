@@ -113,10 +113,10 @@ namespace TeacherPreferencesUI.ViewModels
             db.GeneralPreferences.Load();
             db.Courses.Load();
             db.SpecificPreferences.Load();
-            db.Audiences.Load();         
+            db.Audiences.Load();
             db.AudienceEquipments.Load();
             db.TimeSlots.Load();
-            
+
             Teachers = new ObservableCollection<TeacherViewModel>(
                 db.Teachers.Local.Select(t => TeacherViewModel.FromModel(t, this))
             );
@@ -138,12 +138,12 @@ namespace TeacherPreferencesUI.ViewModels
 
             CurrentView = new InitialView();
         }
-  
+
         public RelayCommand OpenFileCommand => Parser.OpenFileCommand(this);
         public RelayCommand AddCommand => Commands.AddCommand(this);
         public RelayCommand DeleteCommand => Commands.DeleteCommand(this);
         public RelayCommand ErrorBackCommand => Commands.ErrorBackCommand(this);
-        public RelayCommand SwitchToParsingResultCommand => Commands.SwitchToParsingResultCommand(this); 
+        public RelayCommand SwitchToParsingResultCommand => Commands.SwitchToParsingResultCommand(this);
         public RelayCommand BackCommand => Commands.BackCommand(this);
         public RelayCommand SavePreferencesCommand => Commands.SavePreferencesCommand(this);
         public RelayCommand DeletePreferenceCommand => Commands.DeletePreferenceCommand(this);

@@ -84,7 +84,7 @@ namespace TeacherPreferencesUI.ViewModels
                     var trackedTeacher = viewModel.db.Teachers
                         .Include(t => t.GeneralPreferences)
                         .Include(t => t.Courses)
-                        .Include(t => t.TimeSlots) 
+                        .Include(t => t.TimeSlots)
                         .FirstOrDefault(t => t.Id == viewModel.SelectedTeacher.Id);
 
 

@@ -38,7 +38,7 @@ type Group = string
 type Time =
     { Weekday: DayOfWeek
       StartTime: StartTime
-      EndTime: EndTime } with
+      EndTime: EndTime }
     override x.ToString() =
         let weekdayToStringShort =
             function
@@ -49,11 +49,14 @@ type Time =
             | Friday -> "Пт."
             | Saturday -> "Сб."
             | Sunday -> "Вс."
-        let timeToString (t : HoursAndMinutes) =
+
+        let timeToString (t: HoursAndMinutes) =
             let (hh, mm) = t
             $"{hh}:{mm}"
+
         $"{weekdayToStringShort x.Weekday} {timeToString x.StartTime} - {timeToString x.EndTime}"
 
 type Timetable = Dictionary<Time * Group, TimetableSlot>
 
-let ttEmpty () : Timetable = Dictionary<Time * Group, TimetableSlot>()
+let ttEmpty () : Timetable =
+    Dictionary<Time * Group, TimetableSlot>()

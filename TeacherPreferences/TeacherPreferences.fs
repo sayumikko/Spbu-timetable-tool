@@ -94,16 +94,12 @@ and GeneralPreferences =
     | IntersectTimeWithTeacher of TeacherName * Priority
 
 
-and TeacherName = 
-    { 
-      Name: string
+and TeacherName =
+    { Name: string
       Surname: string
-      Patronymic: string option
-    }
+      Patronymic: string option }
 
 and Teacher =
-    { 
-      Name: TeacherName
+    { Name: TeacherName
       Department: Department
-      Preferences: TeacherPreference list 
-    }
+      Preferences: TeacherPreference list }

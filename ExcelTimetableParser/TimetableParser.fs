@@ -160,7 +160,7 @@ module ExcelParser =
             let subCells (cell : IXLCell) =
                 if cell.IsMerged() then
                     let subCells = cell.MergedRange().Unmerge().Cells() |> cellsToSeq
-                    let updated = subCells |> Seq.map (_.SetValue(cell.Value))
+                    let updated = subCells |> Seq.map (fun cell -> cell.SetValue(cell.Value))
                     updated
                 else [cell]
             Seq.map subCells cells |> Seq.concat
@@ -171,7 +171,7 @@ module ExcelParser =
             let cellValue = cell.Value.ToString()
             let headerRange = cell.WorksheetColumn().Intersection(headerRow)
             assert (headerRange.NumberOfCells > 0)
-            let headerValue = worksheet.Cell(headerRange.FirstAddress) |> (_.Value.ToString())
+            let headerValue = worksheet.Cell(headerRange.FirstAddress) |> (fun cell -> cell.Value.ToString())
             match headerValue, cellValue with
             | Date, nonempty when nonempty <> "" -> weekdayString <- cellValue
             | Time, _ -> timeString <- cellValue

@@ -9,7 +9,7 @@ namespace TeacherPreferencesUI.ViewModels
         private AudienceEquipmentType equipmentType;
         private int? intValue;
         private Priority priority;
-        private int courseId; 
+        private int courseId;
 
         public int Id { get; set; }
 
@@ -53,7 +53,7 @@ namespace TeacherPreferencesUI.ViewModels
             }
         }
 
-        public CourseViewModel ParentCourse { get; set; } 
+        public CourseViewModel ParentCourse { get; set; }
 
         public static AudienceEquipmentViewModel FromModel(AudienceEquipment equipment, CourseViewModel parent)
         {

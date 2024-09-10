@@ -33,7 +33,7 @@ namespace TeacherPreferencesUI.ViewModels
                         var parseResult = result.ResultValue;
                         PreferencesValidation.ValidationResult? validationResult = null;
 
-                        if (parseResult.Timetable != null) 
+                        if (parseResult.Timetable != null)
                         {
                             validationResult = PreferencesValidation.validate(viewModel.db, parseResult.Timetable);
 

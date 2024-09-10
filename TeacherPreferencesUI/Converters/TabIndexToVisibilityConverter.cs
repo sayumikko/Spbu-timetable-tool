@@ -14,11 +14,11 @@ namespace TeacherPreferencesUI.Converters
 
             switch (selectedIndex)
             {
-                case 0: 
+                case 0:
                     return (buttonType == "AddPreference" || buttonType == "Back" || buttonType == "Save") ? Visibility.Visible : Visibility.Collapsed;
-                case 1: 
+                case 1:
                     return (buttonType == "AddCourse" || buttonType == "Back" || buttonType == "Save") ? Visibility.Visible : Visibility.Collapsed;
-                case 2: 
+                case 2:
                     return (buttonType == "Back" || buttonType == "Save") ? Visibility.Visible : Visibility.Collapsed;
                 default:
                     return Visibility.Collapsed;

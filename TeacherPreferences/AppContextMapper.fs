@@ -3,7 +3,7 @@
 open TeacherPreferences
 open System.Collections.Generic
 
-let mapDayOfWeek (dayOfWeek: TeacherPreferencesDataModel.DayOfWeek): DayOfWeek =
+let mapDayOfWeek (dayOfWeek: TeacherPreferencesDataModel.DayOfWeek) : DayOfWeek =
     match dayOfWeek with
     | TeacherPreferencesDataModel.DayOfWeek.Monday -> Monday
     | TeacherPreferencesDataModel.DayOfWeek.Tuesday -> Tuesday
@@ -15,7 +15,7 @@ let mapDayOfWeek (dayOfWeek: TeacherPreferencesDataModel.DayOfWeek): DayOfWeek =
     | _ -> failwith "Неизвестный день недели"
 
 
-let mapPriority (priority: TeacherPreferencesDataModel.Priority): Priority =
+let mapPriority (priority: TeacherPreferencesDataModel.Priority) : Priority =
     match priority with
     | TeacherPreferencesDataModel.Priority.Mandatory -> Mandatory
     | TeacherPreferencesDataModel.Priority.Desirable -> Desirable
@@ -24,7 +24,7 @@ let mapPriority (priority: TeacherPreferencesDataModel.Priority): Priority =
     | TeacherPreferencesDataModel.Priority.Avoidable -> Avoidable
     | _ -> failwith "Неизвестный приоритет"
 
-let mapDepartment (departmentName: TeacherPreferencesDataModel.Department): Department =
+let mapDepartment (departmentName: TeacherPreferencesDataModel.Department) : Department =
     match departmentName with
     | TeacherPreferencesDataModel.Department.Astronomy -> Department.Astronomy
     | TeacherPreferencesDataModel.Department.Astrophysics -> Department.Astrophysics
@@ -33,7 +33,8 @@ let mapDepartment (departmentName: TeacherPreferencesDataModel.Department): Depa
     | TeacherPreferencesDataModel.Department.ComputationalMathematics -> Department.ComputationalMathematics
     | TeacherPreferencesDataModel.Department.DifferentialEquations -> Department.DifferentialEquations
     | TeacherPreferencesDataModel.Department.Informatics -> Department.Informatics
-    | TeacherPreferencesDataModel.Department.InformationAndAnalyticalSystems -> Department.InformationAndAnalyticalSystems
+    | TeacherPreferencesDataModel.Department.InformationAndAnalyticalSystems ->
+        Department.InformationAndAnalyticalSystems
     | TeacherPreferencesDataModel.Department.Hydroaeromechanics -> Department.Hydroaeromechanics
     | TeacherPreferencesDataModel.Department.OperationsResearch -> Department.OperationsResearch
     | TeacherPreferencesDataModel.Department.MathematicalAnalysis -> Department.MathematicalAnalysis
@@ -45,23 +46,26 @@ let mapDepartment (departmentName: TeacherPreferencesDataModel.Department): Depa
     | TeacherPreferencesDataModel.Department.StatisticalModeling -> Department.StatisticalModeling
     | TeacherPreferencesDataModel.Department.TheoreticalAndAppliedMechanics -> Department.TheoreticalAndAppliedMechanics
     | TeacherPreferencesDataModel.Department.TheoreticalCybernetics -> Department.TheoreticalCybernetics
-    | TeacherPreferencesDataModel.Department.ProbabilityTheoryAndMathematicalStatistics -> Department.ProbabilityTheoryAndMathematicalStatistics
+    | TeacherPreferencesDataModel.Department.ProbabilityTheoryAndMathematicalStatistics ->
+        Department.ProbabilityTheoryAndMathematicalStatistics
     | TeacherPreferencesDataModel.Department.PhysicalMechanics -> Department.PhysicalMechanics
     | TeacherPreferencesDataModel.Department.ForeignLanguages -> Department.ForeignLanguages
     | TeacherPreferencesDataModel.Department.TheoryOfElasticity -> Department.TheoryOfElasticity
     | _ -> failwith "Неизвестная кафедра"
 
-let mapSpecificPreference (sp: TeacherPreferencesDataModel.SpecificPreference): SpecificPreference =
+let mapSpecificPreference (sp: TeacherPreferencesDataModel.SpecificPreference) : SpecificPreference =
     match sp.PreferenceType with
-    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteGroups -> UniteGroups (mapPriority sp.Priority)
-    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteClasses -> UniteClasses (mapPriority sp.Priority)
-    | TeacherPreferencesDataModel.SpecificPreferenceType.AlternateBySubgroups -> AlternateBySubgroups (mapPriority sp.Priority)
-    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteSubgroups -> UniteSubgroups (mapPriority sp.Priority)
-    | TeacherPreferencesDataModel.SpecificPreferenceType.OneClassInTwoWeeks -> OneClassInTwoWeeks (mapPriority sp.Priority)
-    | TeacherPreferencesDataModel.SpecificPreferenceType.InOneDay -> InOneDay (mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteGroups -> UniteGroups(mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteClasses -> UniteClasses(mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.AlternateBySubgroups ->
+        AlternateBySubgroups(mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.UniteSubgroups -> UniteSubgroups(mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.OneClassInTwoWeeks ->
+        OneClassInTwoWeeks(mapPriority sp.Priority)
+    | TeacherPreferencesDataModel.SpecificPreferenceType.InOneDay -> InOneDay(mapPriority sp.Priority)
     | _ -> failwith "Неизвестный тип предпочтений по курсу"
 
-let mapClassType (classType: TeacherPreferencesDataModel.ClassType): TeacherPreferences.TeacherPreferences.ClassType =
+let mapClassType (classType: TeacherPreferencesDataModel.ClassType) : TeacherPreferences.TeacherPreferences.ClassType =
     match classType with
     | TeacherPreferencesDataModel.ClassType.Lecture -> TeacherPreferences.TeacherPreferences.ClassType.Lecture
     | TeacherPreferencesDataModel.ClassType.Laboratory -> TeacherPreferences.TeacherPreferences.ClassType.Laboratory
@@ -70,39 +74,52 @@ let mapClassType (classType: TeacherPreferencesDataModel.ClassType): TeacherPref
     | TeacherPreferencesDataModel.ClassType.None -> TeacherPreferences.TeacherPreferences.ClassType.NoClassType
     | _ -> failwith "Неизвестный тип занятий"
 
-let mapEquipment (equipment: TeacherPreferencesDataModel.AudienceEquipment): TeacherPreferences.TeacherPreferences.AudienceEquipment = 
+let mapEquipment
+    (equipment: TeacherPreferencesDataModel.AudienceEquipment)
+    : TeacherPreferences.TeacherPreferences.AudienceEquipment =
     let priority = mapPriority equipment.Priority
-    match equipment.EquipmentType with 
+
+    match equipment.EquipmentType with
     | TeacherPreferencesDataModel.AudienceEquipmentType.Blackboard -> Blackboard
     | TeacherPreferencesDataModel.AudienceEquipmentType.Projector -> Projector
     | TeacherPreferencesDataModel.AudienceEquipmentType.Computer -> Computer
     | TeacherPreferencesDataModel.AudienceEquipmentType.ComputerAudience -> ComputerAudience
     | TeacherPreferencesDataModel.AudienceEquipmentType.TimeService -> TimeService
     | TeacherPreferencesDataModel.AudienceEquipmentType.WhiteBoard -> WhiteBoard
-    | TeacherPreferencesDataModel.AudienceEquipmentType.Capacity -> 
-        let intValueOption = if equipment.IntValue.HasValue then Some equipment.IntValue.Value else None
+    | TeacherPreferencesDataModel.AudienceEquipmentType.Capacity ->
+        let intValueOption =
+            if equipment.IntValue.HasValue then
+                Some equipment.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> Capacity (value)
+        | Some value -> Capacity(value)
         | None -> failwith "Не определена вместимость"
-    | TeacherPreferencesDataModel.AudienceEquipmentType.NumberOfBoards -> 
-        let intValueOption = if equipment.IntValue.HasValue then Some equipment.IntValue.Value else None
+    | TeacherPreferencesDataModel.AudienceEquipmentType.NumberOfBoards ->
+        let intValueOption =
+            if equipment.IntValue.HasValue then
+                Some equipment.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> NumberOfBoards (value)
+        | Some value -> NumberOfBoards(value)
         | None -> failwith "Не определено количество досок"
     | _ -> failwith "Неизвестный тип оборудования"
 
-let mapCourse (course: TeacherPreferencesDataModel.Course): (Group * (Subject * ClassType) * SpecificPreference list) =
+let mapCourse (course: TeacherPreferencesDataModel.Course) : (Group * (Subject * ClassType) * SpecificPreference list) =
     let specificPreferences =
         course.SpecificPreferences
         |> Seq.map mapSpecificPreference
         |> Seq.toList
-    
-    let audiences = 
+
+    let audiences =
         course.Audiences
-        |> Seq.map (fun a -> Audience (a.Number, mapPriority a.Priority))
+        |> Seq.map (fun a -> Audience(a.Number, mapPriority a.Priority))
         |> Seq.toList
 
-    let equipments = 
+    let equipments =
         course.AudienceEquipments
         |> Seq.map (fun ae -> Equipment(mapEquipment ae, mapPriority ae.Priority))
         |> Seq.toList
@@ -111,10 +128,10 @@ let mapCourse (course: TeacherPreferencesDataModel.Course): (Group * (Subject * 
     (course.Group, (course.SubjectName, classType), specificPreferences @ audiences @ equipments)
 
 
-let mapTimeSlot (timeSlot: TeacherPreferencesDataModel.TimeSlot): Time =
+let mapTimeSlot (timeSlot: TeacherPreferencesDataModel.TimeSlot) : Time =
     let dayOfWeekSlot: option<DayOfWeek * Priority> =
         if timeSlot.DayOfWeek.HasValue then
-            Some (mapDayOfWeek timeSlot.DayOfWeek.Value, mapPriority timeSlot.Priority)
+            Some(mapDayOfWeek timeSlot.DayOfWeek.Value, mapPriority timeSlot.Priority)
         else
             None
 
@@ -123,58 +140,98 @@ let mapTimeSlot (timeSlot: TeacherPreferencesDataModel.TimeSlot): Time =
         | true, true ->
             let startTime = timeSlot.StartTime.Value
             let endTime = timeSlot.EndTime.Value
-            Some [((startTime.Hours, startTime.Minutes), (endTime.Hours, endTime.Minutes), mapPriority timeSlot.Priority)]
+
+            Some [ ((startTime.Hours, startTime.Minutes),
+                    (endTime.Hours, endTime.Minutes),
+                    mapPriority timeSlot.Priority) ]
         | _ -> None
 
     (dayOfWeekSlot, timeSlotList)
 
-let mapGeneralPreference (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>) (gp: TeacherPreferencesDataModel.GeneralPreference): TeacherPreference =
-    let priority = mapPriority gp.Priority 
-    match gp.PreferenceType with 
-    | TeacherPreferencesDataModel.GeneralPreferenceType.Compactness -> 
-        GeneralPreference (Compactness priority)
-    | TeacherPreferencesDataModel.GeneralPreferenceType.MaxDaysPerWeek -> 
-        let intValueOption = if gp.IntValue.HasValue then Some gp.IntValue.Value else None
+let mapGeneralPreference
+    (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>)
+    (gp: TeacherPreferencesDataModel.GeneralPreference)
+    : TeacherPreference =
+    let priority = mapPriority gp.Priority
+
+    match gp.PreferenceType with
+    | TeacherPreferencesDataModel.GeneralPreferenceType.Compactness -> GeneralPreference(Compactness priority)
+    | TeacherPreferencesDataModel.GeneralPreferenceType.MaxDaysPerWeek ->
+        let intValueOption =
+            if gp.IntValue.HasValue then
+                Some gp.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> GeneralPreference (MaxDaysPerWeek (value, priority))
+        | Some value -> GeneralPreference(MaxDaysPerWeek(value, priority))
         | None -> failwith "MaxDaysPerWeek требует целочисленного значения"
-    | TeacherPreferencesDataModel.GeneralPreferenceType.MinDaysPerWeek -> 
-        let intValueOption = if gp.IntValue.HasValue then Some gp.IntValue.Value else None
+    | TeacherPreferencesDataModel.GeneralPreferenceType.MinDaysPerWeek ->
+        let intValueOption =
+            if gp.IntValue.HasValue then
+                Some gp.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> GeneralPreference (MinDaysPerWeek (value, priority))
+        | Some value -> GeneralPreference(MinDaysPerWeek(value, priority))
         | None -> failwith "MinDaysPerWeek требует целочисленного значения"
-    | TeacherPreferencesDataModel.GeneralPreferenceType.FreeDaysPerWeek -> 
-        let intValueOption = if gp.IntValue.HasValue then Some gp.IntValue.Value else None
+    | TeacherPreferencesDataModel.GeneralPreferenceType.FreeDaysPerWeek ->
+        let intValueOption =
+            if gp.IntValue.HasValue then
+                Some gp.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> GeneralPreference (FreeDaysPerWeek (value, priority))
+        | Some value -> GeneralPreference(FreeDaysPerWeek(value, priority))
         | None -> failwith "FreeDaysPerWeek требует целочисленного значения"
-    | TeacherPreferencesDataModel.GeneralPreferenceType.MaxClassesPerDay -> 
-        let intValueOption = if gp.IntValue.HasValue then Some gp.IntValue.Value else None
+    | TeacherPreferencesDataModel.GeneralPreferenceType.MaxClassesPerDay ->
+        let intValueOption =
+            if gp.IntValue.HasValue then
+                Some gp.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> GeneralPreference (MaxClassesPerDay (value, priority))
+        | Some value -> GeneralPreference(MaxClassesPerDay(value, priority))
         | None -> failwith "MaxClassesPerDay требует целочисленного значения"
-    | TeacherPreferencesDataModel.GeneralPreferenceType.MinClassesPerDay -> 
-        let intValueOption = if gp.IntValue.HasValue then Some gp.IntValue.Value else None
+    | TeacherPreferencesDataModel.GeneralPreferenceType.MinClassesPerDay ->
+        let intValueOption =
+            if gp.IntValue.HasValue then
+                Some gp.IntValue.Value
+            else
+                None
+
         match intValueOption with
-        | Some value -> GeneralPreference (MinClassesPerDay (value, priority))
+        | Some value -> GeneralPreference(MinClassesPerDay(value, priority))
         | None -> failwith "MinClassesPerDay требует целочисленного значения"
-    | TeacherPreferencesDataModel.GeneralPreferenceType.Gaps -> 
-        GeneralPreference (Gaps priority)
-    | TeacherPreferencesDataModel.GeneralPreferenceType.IntersectTimeWithTeacher -> 
+    | TeacherPreferencesDataModel.GeneralPreferenceType.Gaps -> GeneralPreference(Gaps priority)
+    | TeacherPreferencesDataModel.GeneralPreferenceType.IntersectTimeWithTeacher ->
         let intersectWithTeacherName =
-            if gp.TeacherRefId.HasValue && teacherDict.ContainsKey(gp.TeacherRefId.Value) then
+            if
+                gp.TeacherRefId.HasValue
+                && teacherDict.ContainsKey(gp.TeacherRefId.Value)
+            then
                 let teacher = teacherDict.[gp.TeacherRefId.Value]
-                { Name = teacher.Name; Surname = teacher.Surname; Patronymic = Some(teacher.Patronymic) }
+
+                { Name = teacher.Name
+                  Surname = teacher.Surname
+                  Patronymic = Some(teacher.Patronymic) }
             else
                 failwith "Невозможно найти учителя по указанному TeacherRefId"
-        GeneralPreference (IntersectTimeWithTeacher (intersectWithTeacherName, priority))
+
+        GeneralPreference(IntersectTimeWithTeacher(intersectWithTeacherName, priority))
     | _ -> failwith "Неизвестный тип предпочтений"
 
 
-let mapTeacher (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>) (teacher: TeacherPreferencesDataModel.Teacher) : Teacher =
+let mapTeacher
+    (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>)
+    (teacher: TeacherPreferencesDataModel.Teacher)
+    : Teacher =
     let department = mapDepartment teacher.Department
-    
-    let generalPreferences = 
+
+    let generalPreferences =
         teacher.GeneralPreferences
         |> Seq.map (mapGeneralPreference teacherDict)
         |> Seq.toList
@@ -183,23 +240,21 @@ let mapTeacher (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teache
         teacher.Courses
         |> Seq.map mapCourse
         |> Seq.collect (fun (group, classInfo, prefs) ->
-            prefs |> List.map (fun pref -> SpecificPreference (group, classInfo, pref))
-        )
+            prefs
+            |> List.map (fun pref -> SpecificPreference(group, classInfo, pref)))
         |> Seq.toList
 
-    let timePreferences = 
-        teacher.TimeSlots 
+    let timePreferences =
+        teacher.TimeSlots
         |> Seq.map mapTimeSlot
         |> Seq.map (fun time -> TeacherPreference.Time time)
         |> Seq.toList
 
-    {
-        Name = 
-            {
-                Name = teacher.Name
-                Surname = teacher.Surname
-                Patronymic = Some(teacher.Patronymic)
-            }
-        Department = department
-        Preferences = generalPreferences @ specificPreferences @ timePreferences
-    }
+    { Name =
+        { Name = teacher.Name
+          Surname = teacher.Surname
+          Patronymic = Some(teacher.Patronymic) }
+      Department = department
+      Preferences =
+        generalPreferences
+        @ specificPreferences @ timePreferences }

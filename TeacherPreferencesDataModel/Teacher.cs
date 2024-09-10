@@ -10,7 +10,7 @@
 
         public ICollection<GeneralPreference>? GeneralPreferences { get; set; }
         public ICollection<Course>? Courses { get; set; }
-        public ICollection<TimeSlot>? TimeSlots { get; set; } 
+        public ICollection<TimeSlot>? TimeSlots { get; set; }
     }
 
     public class TimeSlot
@@ -21,7 +21,7 @@
         public TimeSpan? EndTime { get; set; }
         public Priority Priority { get; set; }
 
-        public int TeacherId { get; set; } 
+        public int TeacherId { get; set; }
         public Teacher Teacher { get; set; }
     }
 }

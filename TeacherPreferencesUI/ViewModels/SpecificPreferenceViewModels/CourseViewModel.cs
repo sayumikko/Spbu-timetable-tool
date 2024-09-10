@@ -14,7 +14,7 @@ namespace TeacherPreferencesUI.ViewModels
         private ClassType classType;
         private int teacherId;
         private ObservableCollection<SpecificPreferenceViewModel> specificPreferences = new();
-        private ObservableCollection<AudienceViewModel> audiences = new(); 
+        private ObservableCollection<AudienceViewModel> audiences = new();
         private ObservableCollection<AudienceEquipmentViewModel> audienceEquipments = new();
 
         public string FullInfoAboutCourse => $"{subjectName}, {group}, {classType}";

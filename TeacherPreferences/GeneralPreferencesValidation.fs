@@ -4,10 +4,11 @@ open ExcelTimetableParser.Timetable
 open TeacherPreferences
 
 let abbreviateTeacherName (teacher: TeacherName) =
-    let initials = 
+    let initials =
         match teacher.Patronymic with
         | Some patr -> $"{teacher.Name.[0]}.{patr.[0]}."
         | None -> $"{teacher.Name.[0]}."
+
     $"{teacher.Surname} {initials}"
 
 let translateDayOfWeek (weekday: ExcelTimetableParser.Timetable.DayOfWeek) =
@@ -25,20 +26,21 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
     teacher.Preferences
     |> List.collect (function
         | GeneralPreference (MaxDaysPerWeek (maxDays, priority)) ->
-                    let daysTaught =
-                        timetable
-                        |> Seq.filter (fun kvp ->
-                            let ((_, _), slot) = kvp.Key, kvp.Value
-                            slot.Teachers |> List.contains abbreviatedName)
-                        |> Seq.distinctBy (fun kvp -> 
-                            let (time, _) = kvp.Key
-                            time.Weekday)
-                        |> Seq.length
-                    if daysTaught > maxDays && priority = Mandatory then
-                        [ $"У преподавателя {teacher.Name.Surname} количество
+            let daysTaught =
+                timetable
+                |> Seq.filter (fun kvp ->
+                    let ((_, _), slot) = kvp.Key, kvp.Value
+                    slot.Teachers |> List.contains abbreviatedName)
+                |> Seq.distinctBy (fun kvp ->
+                    let (time, _) = kvp.Key
+                    time.Weekday)
+                |> Seq.length
+
+            if daysTaught > maxDays && priority = Mandatory then
+                [ $"У преподавателя {teacher.Name.Surname} количество
                             дней в расписании превышает желаемое: ({maxDays})." ]
-                    else
-                        []
+            else
+                []
 
         | GeneralPreference (MinDaysPerWeek (minDays, priority)) ->
             let daysTaught =
@@ -46,10 +48,11 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                 |> Seq.filter (fun kvp ->
                     let ((time, _), slot) = kvp.Key, kvp.Value
                     slot.Teachers |> List.contains abbreviatedName)
-                |> Seq.distinctBy (fun kvp -> 
+                |> Seq.distinctBy (fun kvp ->
                     let (time, _) = kvp.Key
                     time.Weekday)
                 |> Seq.length
+
             if daysTaught < minDays && priority = Mandatory then
                 [ $"Преподаватель {teacher.Name.Surname} проводит меньше минимального желаемого количества дней ({minDays})." ]
             else
@@ -65,14 +68,16 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                     let (time, _) = kvp.Key
                     time.Weekday)
                 |> Seq.length
+
             let totalDaysInWeek = 6
             let freeDays = totalDaysInWeek - daysTaught
+
             if freeDays < minFreeDays && priority = Mandatory then
                 [ $"Преподаватель {teacher.Name.Surname} должен иметь не менее {minFreeDays} свободных дней в неделю, но имеет только {freeDays}." ]
             else
                 []
 
-        
+
         | GeneralPreference (MaxClassesPerDay (maxClasses, priority)) ->
             let classesPerDay =
                 timetable
@@ -81,7 +86,10 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                     slot.Teachers |> List.contains abbreviatedName)
                 |> Seq.groupBy (fun kvp -> let (time, _) = kvp.Key in time.Weekday)
                 |> Seq.map (fun (_, slots) -> Seq.length slots)
-            if classesPerDay |> Seq.exists (fun count -> count > maxClasses) && priority = Mandatory then
+
+            if classesPerDay
+               |> Seq.exists (fun count -> count > maxClasses)
+               && priority = Mandatory then
                 [ $"Преподаватель {teacher.Name.Surname} имеет больше {maxClasses} пар в день." ]
             else
                 []
@@ -94,7 +102,10 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                     slot.Teachers |> List.contains abbreviatedName)
                 |> Seq.groupBy (fun kvp -> let (time, _) = kvp.Key in time.Weekday)
                 |> Seq.map (fun (_, slots) -> Seq.length slots)
-            if classesPerDay |> Seq.exists (fun count -> count < minClasses) && priority = Mandatory then
+
+            if classesPerDay
+               |> Seq.exists (fun count -> count < minClasses)
+               && priority = Mandatory then
                 [ $"Преподаватель {teacher.Name.Surname} имеет меньше {minClasses} пар в день." ]
             else
                 []
@@ -117,6 +128,7 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                         |> Seq.sortBy (fun kvp ->
                             let (time, _) = kvp.Key
                             time.StartTime)
+
                     let noGapsInDay =
                         sortedClasses
                         |> Seq.pairwise
@@ -125,7 +137,8 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                             let (time2, _) = kvp2.Key
                             let endTime1 = time1.EndTime
                             let startTime2 = time2.StartTime
-                            endTime1 >= startTime2) 
+                            endTime1 >= startTime2)
+
                     if noGapsInDay then
                         Some weekday
                     else
@@ -134,7 +147,11 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
             if Seq.isEmpty daysWithoutGaps then
                 []
             elif priority = Mandatory then
-                let daysList = daysWithoutGaps |> Seq.map (fun wd -> wd.ToString()) |> String.concat ", "
+                let daysList =
+                    daysWithoutGaps
+                    |> Seq.map (fun wd -> wd.ToString())
+                    |> String.concat ", "
+
                 [ $"Преподаватель {teacher.Name.Surname} не должен иметь окна между занятиями,
                     но они найдены в следующие дни: {daysList}." ]
             else
@@ -159,6 +176,7 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                         |> Seq.sortBy (fun kvp ->
                             let (time, _) = kvp.Key
                             time.StartTime)
+
                     let noGapsInDay =
                         sortedClasses
                         |> Seq.pairwise
@@ -167,7 +185,8 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                             let (time2, _) = kvp2.Key
                             let endTime1 = time1.EndTime
                             let startTime2 = time2.StartTime
-                            endTime1 < startTime2) 
+                            endTime1 < startTime2)
+
                     if noGapsInDay then
                         Some weekday
                     else
@@ -176,7 +195,11 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
             if Seq.isEmpty daysWithoutGaps then
                 []
             elif priority = Mandatory then
-                let daysList = daysWithoutGaps |> Seq.map translateDayOfWeek |> String.concat ", "
+                let daysList =
+                    daysWithoutGaps
+                    |> Seq.map translateDayOfWeek
+                    |> String.concat ", "
+
                 [ $"Преподаватель {teacher.Name.Surname} должен иметь окна между занятиями, но они не найдены в следующие дни: {daysList}." ]
             else
                 []
@@ -194,30 +217,32 @@ let validateGeneralPreferences (teacher: Teacher) (abbreviatedName: string) (tim
                 timetable
                 |> Seq.filter (fun kvp ->
                     let ((time, _), slot) = kvp.Key, kvp.Value
-                    slot.Teachers |> List.contains otherAbbreviatedName)
+
+                    slot.Teachers
+                    |> List.contains otherAbbreviatedName)
 
             let intersectionsFound =
                 teacherClasses
-                |> Seq.exists (fun (KeyValue((time, _), _)) ->
+                |> Seq.exists (fun (KeyValue ((time, _), _)) ->
                     otherTeacherClasses
-                    |> Seq.exists (fun (KeyValue((otherTime, _), _)) ->
-                        time.Weekday = otherTime.Weekday &&
-                        time.StartTime = otherTime.StartTime &&
-                        time.EndTime = otherTime.EndTime))
+                    |> Seq.exists (fun (KeyValue ((otherTime, _), _)) ->
+                        time.Weekday = otherTime.Weekday
+                        && time.StartTime = otherTime.StartTime
+                        && time.EndTime = otherTime.EndTime))
 
 
             if not intersectionsFound then
                 let errorMessage =
                     match priority with
-                    | Mandatory -> 
+                    | Mandatory ->
                         $"Преподаватель {teacher.Name.Surname} должен пересекаться по времени с преподавателем {otherTeacherName.Surname}, но это не выполнено."
-                    | Desirable -> 
+                    | Desirable ->
                         $"Желательно, чтобы преподаватель {teacher.Name.Surname} пересекался по времени с преподавателем {otherTeacherName.Surname}, но это не выполнено."
                     | _ -> ""
+
                 [ errorMessage ]
             else
                 []
 
 
-        | _ -> []
-    )
+        | _ -> [])

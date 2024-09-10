@@ -30,7 +30,7 @@ namespace TeacherPreferencesDataModel
         public Priority Priority { get; set; }
 
         public int CourseId { get; set; }
-        public Course Course { get; set; } 
+        public Course Course { get; set; }
     }
 
     public class AudienceEquipment
@@ -40,8 +40,8 @@ namespace TeacherPreferencesDataModel
         public int? IntValue { get; set; }
         public Priority Priority { get; set; }
 
-        public int CourseId { get; set; } 
-        public Course Course { get; set; } 
+        public int CourseId { get; set; }
+        public Course Course { get; set; }
     }
 }
 
