@@ -13,19 +13,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
+
     - name: Run C# linter (dotnet format)
       run: dotnet-format --check
+
     - name: Install Fantomas (F# linter)
       run: dotnet tool install -g fantomas-tool
+
     - name: Run F# linter (Fantomas)
       run: fantomas . --check --recurse
+
     - name: Build
       run: dotnet build --no-restore
+
+    - name: Run Tests
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: spbu-timetable-tool
+        path: ./output
