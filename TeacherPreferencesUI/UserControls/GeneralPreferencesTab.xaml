@@ -13,6 +13,7 @@
         <conv:PreferenceTypeToTeacherVisibilityConverter x:Key="PreferenceTypeToTeacherVisibilityConverter"/>
         <conv:TeacherIdToTeacherConverter x:Key="TeacherIdToTeacherConverter"/>
         <conv:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+        <conv:GeneralPreferencePriorityFilterConverter x:Key="GeneralPreferencePriorityFilterConverter" />
     </UserControl.Resources>
 
     <Grid Background="#F6EFD7">
@@ -106,9 +107,9 @@
                                       Width="200" Margin="5,0"/>
 
 
-                                    <ComboBox ItemsSource="{Binding Source={x:Static conv:EnumSource.Priorities}}"
-                                              SelectedItem="{Binding Priority, UpdateSourceTrigger=PropertyChanged}"
-                                              Width="130" Margin="5,0">
+                                    <ComboBox ItemsSource="{Binding PreferenceType, Converter={StaticResource GeneralPreferencePriorityFilterConverter}}"
+                                          SelectedItem="{Binding Priority, UpdateSourceTrigger=PropertyChanged}"
+                                          Width="130" Margin="5,0">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>

@@ -8,6 +8,7 @@ open AppContextMapper
 open GeneralPreferencesValidation
 open SpecificPreferencesValidation
 open TimePreferencesValidation
+open System
 
 type ValidationResult =
     | Valid
@@ -24,8 +25,8 @@ let convertTeachers
 let abbreviateTeacherName (teacher: TeacherName) =
     let initials =
         match teacher.Patronymic with
-        | Some patr -> $"{teacher.Name.[0]}.{patr.[0]}."
-        | None -> $"{teacher.Name.[0]}."
+        | Some patr when not (String.IsNullOrEmpty(patr)) -> $"{teacher.Name.[0]}.{patr.[0]}."
+        | _ -> $"{teacher.Name.[0]}."
 
     $"{teacher.Surname} {initials}"
 
@@ -54,21 +55,7 @@ let findTeacherAndValidate (teacher: Teacher) (timetable: Timetable) : string li
         let generalErrors = validateGeneralPreferences teacher abbreviatedName timetable
 
         timeErrors @ specificErrors @ generalErrors
-    | None -> [ $"Преподаватель {teacher.Name.Surname} не найден в расписании." ]
-
-let timetableToString (timetable: Timetable) : string list =
-    timetable
-    |> Seq.map (fun kvp ->
-        let (time, group) = kvp.Key
-        let slot = kvp.Value
-        let timeString = time.ToString()
-        let subject = slot.Subject
-        let teachers = String.concat ", " slot.Teachers
-        let audience = slot.Audience
-        let classType = slot.ClassType
-
-        $"{timeString}, Group: {group}, Subject: {subject}, Teachers: {teachers}, Audience: {audience}, Class Type: {classType}")
-    |> Seq.toList
+    | None -> [ $"Преподаватель {abbreviateTeacherName teacher.Name} не найден в расписании." ]
 
 let validate (preferences: ApplicationContext) (timetable: Timetable) : ValidationResult =
     let dataService = new DataService(preferences)
@@ -86,8 +73,6 @@ let validate (preferences: ApplicationContext) (timetable: Timetable) : Validati
         teacherList
         |> List.collect (fun teacher -> findTeacherAndValidate teacher timetable)
 
-    let timetableString = timetableToString timetable
-    // Invalid timetableString // Выведем расписание в формате строк
     if List.isEmpty errors then
         Valid
     else

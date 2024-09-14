@@ -4,6 +4,8 @@ using TeacherPreferencesUI.Commands;
 using TeacherPreferencesUI.UserControls;
 using Microsoft.EntityFrameworkCore;
 using TeacherPreferencesUI.ViewModels.SpecificPreferenceViewModels;
+using static TeacherPreferences.TeacherPreferences;
+using System.Windows;
 
 namespace TeacherPreferencesUI.ViewModels
 {
@@ -13,18 +15,26 @@ namespace TeacherPreferencesUI.ViewModels
         {
             return new RelayCommand((o) =>
             {
-                AddTeacherWindow addTeacherWindow = new AddTeacherWindow(new TeacherViewModel());
+                TeacherViewModel newTeacher = new TeacherViewModel();
+
+                AddTeacherWindow addTeacherWindow = new AddTeacherWindow(viewModel, newTeacher);
+
                 if (addTeacherWindow.ShowDialog() == true)
                 {
-                    TeacherViewModel teacherViewModel = addTeacherWindow.teacher;
-                    Teacher teacher = teacherViewModel.ToModel();
-                    viewModel.db.Teachers.Add(teacher);
-                    viewModel.db.SaveChanges();
+                    TeacherViewModel teacherViewModel = viewModel.EditingTeacher;
+                    if (teacherViewModel != null)
+                    {
+                        TeacherPreferencesDataModel.Teacher teacher = teacherViewModel.ToModel();
+                        viewModel.db.Teachers.Add(teacher);
+                        viewModel.db.SaveChanges();
 
-                    viewModel.Teachers.Add(TeacherViewModel.FromModel(teacher, viewModel));
+                        viewModel.Teachers.Add(TeacherViewModel.FromModel(teacher, viewModel));
+                    }
                 }
             });
         }
+
+
 
         public static RelayCommand DeleteCommand(ApplicationViewModel viewModel)
         {
@@ -47,6 +57,21 @@ namespace TeacherPreferencesUI.ViewModels
                 }
             });
         }
+
+        public static RelayCommand ClearAllTeachersCommand(ApplicationViewModel viewModel)
+        {
+            return new RelayCommand((o) =>
+            {
+                if (MessageBox.Show("Вы уверены, что хотите очистить список преподавателей?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    // Очистка списка
+                    viewModel.Teachers.Clear();
+                    viewModel.db.Teachers.RemoveRange(viewModel.db.Teachers);
+                    viewModel.db.SaveChanges();
+                }
+            });
+        }
+
 
         public static RelayCommand SwitchToParsingResultCommand(ApplicationViewModel viewModel)
         {
@@ -169,7 +194,7 @@ namespace TeacherPreferencesUI.ViewModels
                         TeacherId = viewModel.SelectedTeacher.Id,
                         PreferenceType = GeneralPreferenceType.MaxDaysPerWeek,
                         IntValue = 0,
-                        Priority = Priority.Neutral
+                        Priority = TeacherPreferencesDataModel.Priority.Neutral
                     };
 
                     viewModel.SelectedTeacher.GeneralPreferences.Add(defaultPreference);
@@ -198,7 +223,7 @@ namespace TeacherPreferencesUI.ViewModels
                     {
                         CourseId = courseViewModel.Id,
                         SpecificPreferenceType = SpecificPreferenceType.InOneDay,
-                        Priority = Priority.Neutral
+                        Priority = TeacherPreferencesDataModel.Priority.Neutral
                     };
 
                     courseViewModel.SpecificPreferences.Add(defaultSpecificPreference);
@@ -227,7 +252,7 @@ namespace TeacherPreferencesUI.ViewModels
                         TeacherId = viewModel.SelectedTeacher.Id,
                         SubjectName = "Новый курс",
                         Group = "Новая группа",
-                        ClassType = ClassType.Lecture,
+                        ClassType = TeacherPreferencesDataModel.ClassType.Lecture,
                     };
 
                     viewModel.Courses.Add(newCourse);
@@ -256,7 +281,7 @@ namespace TeacherPreferencesUI.ViewModels
                     {
                         IntValue = null,
                         EquipmentType = AudienceEquipmentType.Projector,
-                        Priority = Priority.Neutral,
+                        Priority = TeacherPreferencesDataModel.Priority.Neutral,
                         ParentCourse = course,
                         CourseId = course.Id
                     };
@@ -279,7 +304,7 @@ namespace TeacherPreferencesUI.ViewModels
                     var newAudience = new AudienceViewModel
                     {
                         Number = 0,
-                        Priority = Priority.Neutral,
+                        Priority = TeacherPreferencesDataModel.Priority.Neutral,
                         CourseId = course.Id,
                         ParentCourse = course
                     };
@@ -370,7 +395,7 @@ namespace TeacherPreferencesUI.ViewModels
                         DayOfWeek = TeacherPreferencesDataModel.DayOfWeek.AllWeek,
                         StartTime = new TimeSpan(9, 30, 0),
                         EndTime = new TimeSpan(18, 45, 0),
-                        Priority = Priority.Neutral,
+                        Priority = TeacherPreferencesDataModel.Priority.Neutral,
                         TeacherId = viewModel.SelectedTeacher.Id
                     };
 

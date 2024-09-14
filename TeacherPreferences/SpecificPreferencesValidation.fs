@@ -24,7 +24,7 @@ let formatTeacherName (teacher: Teacher) =
     $"{teacher.Name.Surname} {teacher.Name.Name[0]}. {patronymic}"
 
 
-let validateSpecificPreferences (teacher: Teacher) (abbreviatedName: string) (timetable: Timetable) =
+let validateSpecificPreferences (teacher: Teacher) (abbreviatedName: string) (timetable: Timetable) : string list =
     teacher.Preferences
     |> List.collect (function
         | SpecificPreference (group, (subject, classType), Audience (audience, priority)) ->
@@ -38,6 +38,7 @@ let validateSpecificPreferences (teacher: Teacher) (abbreviatedName: string) (ti
                     && stringContainsIgnoreCase subject slot.Subject
                     && slot.Audience = audience
                     && slot.ClassType = convertActivityTypeToClassType classType)
+
 
             match priority with
             | Mandatory when Seq.isEmpty matchingSlots ->
@@ -93,7 +94,7 @@ let validateSpecificPreferences (teacher: Teacher) (abbreviatedName: string) (ti
             let matchingSlotsForGroup =
                 timetable
                 |> Seq.filter (fun kvp ->
-                    let (time, timetableGroup) = kvp.Key
+                    let (_, timetableGroup) = kvp.Key
                     let slot = kvp.Value
 
                     timetableGroup = group
@@ -131,9 +132,9 @@ let validateSpecificPreferences (teacher: Teacher) (abbreviatedName: string) (ti
 
             conflictingSlots |> Seq.toList
 
-        | SpecificPreference (group, (subject, classType), AlternateBySubgroups (priority)) -> []
-        | SpecificPreference (group, (subject, classType), UniteSubgroups (priority)) -> []
-        | SpecificPreference (group, (subject, classType), OneClassInTwoWeeks (priority)) -> []
+        | SpecificPreference (group, (subject, classType), AlternateBySubgroups (priority)) -> [] // В пожеланиях преподавателей эти моменты были, но в таблице
+        | SpecificPreference (group, (subject, classType), UniteSubgroups (priority)) -> [] // эксель непонятно как они формально записываются,
+        | SpecificPreference (group, (subject, classType), OneClassInTwoWeeks (priority)) -> [] // так как эти пожелания чаще всего идут в обход официальным данным
 
         | SpecificPreference (group, (subject, classType), InOneDay (priority)) ->
             let matchingSlotsForGroup =

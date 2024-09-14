@@ -274,10 +274,7 @@ module ExcelParser =
                         |> ignore
                     | None -> errors.Add($"Ошибка обработки времени для ячейки {cell.Address.ToString()}")
                 | None -> errors.Add($"Ошибка обработки лекции для ячейки {cell.Address.ToString()}")
-            | _ ->
-                errors.Add(
-                    $"Ячейка {headerRange.FirstAddress.ToString()} со значением {headerValue} не является группой или датой/временем"
-                )
+            | _ -> ()
 
 
 

@@ -16,9 +16,21 @@ namespace TeacherPreferencesUI.ViewModels
         public ObservableCollection<TeacherViewModel> Teachers { get; set; }
         public ICollectionView SortedTeachers { get; private set; }
 
+        public ObservableCollection<Department> Departments { get; set; }
         public ObservableCollection<GeneralPreferenceViewModel> GeneralPreferences { get; set; }
         public ObservableCollection<CourseViewModel> Courses { get; set; }
         public ObservableCollection<TimeSlotViewModel> TimeSlots { get; set; }
+
+        private TeacherViewModel? editingTeacher;
+        public TeacherViewModel? EditingTeacher
+        {
+            get { return editingTeacher; }
+            set
+            {
+                editingTeacher = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private object currentView;
@@ -110,6 +122,7 @@ namespace TeacherPreferencesUI.ViewModels
             db.Database.EnsureCreated();
 
             db.Teachers.Load();
+            db.Departments.Load();
             db.GeneralPreferences.Load();
             db.Courses.Load();
             db.SpecificPreferences.Load();
@@ -123,6 +136,8 @@ namespace TeacherPreferencesUI.ViewModels
 
             SortedTeachers = CollectionViewSource.GetDefaultView(Teachers);
             SortedTeachers.SortDescriptions.Add(new SortDescription(nameof(TeacherViewModel.FullName), ListSortDirection.Ascending));
+
+            Departments = new ObservableCollection<Department>(db.Departments.Local.ToObservableCollection());
 
             GeneralPreferences = new ObservableCollection<GeneralPreferenceViewModel>(
                 db.GeneralPreferences.Local.Select(gp => GeneralPreferenceViewModel.FromModel(gp))
@@ -140,8 +155,11 @@ namespace TeacherPreferencesUI.ViewModels
         }
 
         public RelayCommand OpenFileCommand => Parser.OpenFileCommand(this);
+        public RelayCommand LoadAcademicLoadCommand => Parser.LoadAcademicLoadCommand(this);
         public RelayCommand AddCommand => Commands.AddCommand(this);
         public RelayCommand DeleteCommand => Commands.DeleteCommand(this);
+        public RelayCommand SaveTeacherCommand => Commands.DeleteTimeSlotCommand(this);
+        public RelayCommand ClearAllTeachersCommand => Commands.ClearAllTeachersCommand(this);
         public RelayCommand ErrorBackCommand => Commands.ErrorBackCommand(this);
         public RelayCommand SwitchToParsingResultCommand => Commands.SwitchToParsingResultCommand(this);
         public RelayCommand BackCommand => Commands.BackCommand(this);

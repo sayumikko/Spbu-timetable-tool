@@ -90,7 +90,7 @@ let prettyPrintPreferences (teacher: Teacher) : string =
             let priority = prettyPrintPriority priority
             sprintf "%s ставить все пары в один день\n" priority
 
-    let prettyPrintTime (dayOfWeekOption) (timeSlotOption) =
+    let prettyPrintTime (dayOfWeekSlot, timeSlot) priority =
         let prettyPrintDayOfWeek dayOfWeek =
             match dayOfWeek with
             | Monday -> " понедельник"
@@ -101,34 +101,23 @@ let prettyPrintPreferences (teacher: Teacher) : string =
             | Saturday -> " субботу"
             | AllWeek -> " всю неделю"
 
-        let prettyPrintTimeSlot time =
-            match time with
-            | ((startHour, startMinutes), (finalTime, finalMinutes), priority) ->
-                let priority = prettyPrintPriority priority
+        let prettyPrintPriority priority =
+            match priority with
+            | Mandatory -> "Необходимо"
+            | Desirable -> "Желательно"
+            | Neutral -> "Нейтральное отношение"
+            | NotDesirable -> "Нежелательно"
+            | Avoidable -> "Недопустимо"
 
-                sprintf
-                    "  %s ставить с %s до %s\n"
-                    priority
-                    (formatTime (startHour, startMinutes))
-                    (formatTime (finalTime, finalMinutes))
+        let prettyPrintTimeSlot (startTime, endTime) =
+            sprintf "с %s до %s" (formatTime startTime) (formatTime endTime)
 
-        let dayOfWeekStr =
-            match dayOfWeekOption with
-            | Some (dayOfWeek, priority) ->
-                let dayOfWeekStr = prettyPrintDayOfWeek dayOfWeek
-                let priority = prettyPrintPriority priority
-                sprintf "    Необходимо ставить пары в%s\n" dayOfWeekStr
-            | None -> ""
+        let dayOfWeekStr = prettyPrintDayOfWeek dayOfWeekSlot
+        let timeSlotStr = prettyPrintTimeSlot timeSlot
+        let priorityStr = prettyPrintPriority priority
 
-        let timeSlotsStr =
-            match timeSlotOption with
-            | Some (times) ->
-                times
-                |> List.map prettyPrintTimeSlot
-                |> String.concat ""
-            | None -> ""
+        sprintf "  %s ставить пары в%s %s\n" priorityStr dayOfWeekStr timeSlotStr
 
-        dayOfWeekStr + timeSlotsStr
 
     let prettyPrintSubjectOrGroupPreferences (groupOption, subjectOption, preference) =
         let prettyPrintClassType classtype =
@@ -151,32 +140,6 @@ let prettyPrintPreferences (teacher: Teacher) : string =
         let preferencesStr = prettyPrintSpecificPreferences preference
         targetStr + preferencesStr
 
-    let printDepartment department =
-        match department with
-        | Astronomy -> "астрономии"
-        | Astrophysics -> "астрофизики"
-        | Algebra -> "высшей алгебры и теории чисел"
-        | Geometry -> "высшей геометрии"
-        | ComputationalMathematics -> "вычислительной математики"
-        | DifferentialEquations -> "дифференциальных уравнений"
-        | Informatics -> "информатики"
-        | InformationAndAnalyticalSystems -> "информационно-аналитических систем"
-        | Hydroaeromechanics -> "гидроаэромеханики"
-        | OperationsResearch -> "исследования операций"
-        | MathematicalAnalysis -> "математического анализа"
-        | MathematicalPhysics -> "математической физики"
-        | CelestialMechanics -> "небесной механики"
-        | ParallelAlgorithms -> "параллельных алгоритмов"
-        | AppliedCybernetics -> "прикладной кибернетики"
-        | SystemProgramming -> "системного программирования"
-        | StatisticalModeling -> "статистического моделирования"
-        | TheoreticalAndAppliedMechanics -> "теоретической и прикладной механики"
-        | TheoreticalCybernetics -> "теоретической кибернетики"
-        | ProbabilityTheoryAndMathematicalStatistics -> "теории вероятностей и математической статистики"
-        | PhysicalMechanics -> "физической механики"
-        | ForeignLanguages -> "иностранных языков в сфере математических наук"
-        | TheoryOfElasticity -> "теории упругости"
-
     let patronymic =
         match teacher.Name.Patronymic with
         | Some patr -> patr
@@ -188,7 +151,7 @@ let prettyPrintPreferences (teacher: Teacher) : string =
             (colorizeText teacher.Name.Surname 31)
             (colorizeText teacher.Name.Name 31)
             (colorizeText patronymic 31)
-            (colorizeText (printDepartment teacher.Department) 31)
+            (colorizeText ((string) teacher.Department) 31)
 
     let preferencesStr =
         teacher.Preferences

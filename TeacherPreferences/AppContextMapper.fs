@@ -3,7 +3,7 @@
 open TeacherPreferences
 open System.Collections.Generic
 
-let mapDayOfWeek (dayOfWeek: TeacherPreferencesDataModel.DayOfWeek) : DayOfWeek =
+let mapDayOfWeek (dayOfWeek: TeacherPreferencesDataModel.DayOfWeek) : DayOfWeekSlot =
     match dayOfWeek with
     | TeacherPreferencesDataModel.DayOfWeek.Monday -> Monday
     | TeacherPreferencesDataModel.DayOfWeek.Tuesday -> Tuesday
@@ -23,35 +23,6 @@ let mapPriority (priority: TeacherPreferencesDataModel.Priority) : Priority =
     | TeacherPreferencesDataModel.Priority.NotDesirable -> NotDesirable
     | TeacherPreferencesDataModel.Priority.Avoidable -> Avoidable
     | _ -> failwith "Неизвестный приоритет"
-
-let mapDepartment (departmentName: TeacherPreferencesDataModel.Department) : Department =
-    match departmentName with
-    | TeacherPreferencesDataModel.Department.Astronomy -> Department.Astronomy
-    | TeacherPreferencesDataModel.Department.Astrophysics -> Department.Astrophysics
-    | TeacherPreferencesDataModel.Department.Algebra -> Department.Algebra
-    | TeacherPreferencesDataModel.Department.Geometry -> Department.Geometry
-    | TeacherPreferencesDataModel.Department.ComputationalMathematics -> Department.ComputationalMathematics
-    | TeacherPreferencesDataModel.Department.DifferentialEquations -> Department.DifferentialEquations
-    | TeacherPreferencesDataModel.Department.Informatics -> Department.Informatics
-    | TeacherPreferencesDataModel.Department.InformationAndAnalyticalSystems ->
-        Department.InformationAndAnalyticalSystems
-    | TeacherPreferencesDataModel.Department.Hydroaeromechanics -> Department.Hydroaeromechanics
-    | TeacherPreferencesDataModel.Department.OperationsResearch -> Department.OperationsResearch
-    | TeacherPreferencesDataModel.Department.MathematicalAnalysis -> Department.MathematicalAnalysis
-    | TeacherPreferencesDataModel.Department.MathematicalPhysics -> Department.MathematicalPhysics
-    | TeacherPreferencesDataModel.Department.CelestialMechanics -> Department.CelestialMechanics
-    | TeacherPreferencesDataModel.Department.ParallelAlgorithms -> Department.ParallelAlgorithms
-    | TeacherPreferencesDataModel.Department.AppliedCybernetics -> Department.AppliedCybernetics
-    | TeacherPreferencesDataModel.Department.SystemProgramming -> Department.SystemProgramming
-    | TeacherPreferencesDataModel.Department.StatisticalModeling -> Department.StatisticalModeling
-    | TeacherPreferencesDataModel.Department.TheoreticalAndAppliedMechanics -> Department.TheoreticalAndAppliedMechanics
-    | TeacherPreferencesDataModel.Department.TheoreticalCybernetics -> Department.TheoreticalCybernetics
-    | TeacherPreferencesDataModel.Department.ProbabilityTheoryAndMathematicalStatistics ->
-        Department.ProbabilityTheoryAndMathematicalStatistics
-    | TeacherPreferencesDataModel.Department.PhysicalMechanics -> Department.PhysicalMechanics
-    | TeacherPreferencesDataModel.Department.ForeignLanguages -> Department.ForeignLanguages
-    | TeacherPreferencesDataModel.Department.TheoryOfElasticity -> Department.TheoryOfElasticity
-    | _ -> failwith "Неизвестная кафедра"
 
 let mapSpecificPreference (sp: TeacherPreferencesDataModel.SpecificPreference) : SpecificPreference =
     match sp.PreferenceType with
@@ -129,24 +100,25 @@ let mapCourse (course: TeacherPreferencesDataModel.Course) : (Group * (Subject *
 
 
 let mapTimeSlot (timeSlot: TeacherPreferencesDataModel.TimeSlot) : Time =
-    let dayOfWeekSlot: option<DayOfWeek * Priority> =
-        if timeSlot.DayOfWeek.HasValue then
-            Some(mapDayOfWeek timeSlot.DayOfWeek.Value, mapPriority timeSlot.Priority)
-        else
-            None
+    let priority = mapPriority timeSlot.Priority
 
-    let timeSlotList: option<((int * int) * (int * int) * Priority) list> =
+    let dayOfWeekSlot: DayOfWeekSlot =
+        if timeSlot.DayOfWeek.HasValue then
+            mapDayOfWeek timeSlot.DayOfWeek.Value
+        else
+            AllWeek
+
+    let timeSlot: TimeSlot =
         match timeSlot.StartTime.HasValue, timeSlot.EndTime.HasValue with
         | true, true ->
             let startTime = timeSlot.StartTime.Value
             let endTime = timeSlot.EndTime.Value
 
-            Some [ ((startTime.Hours, startTime.Minutes),
-                    (endTime.Hours, endTime.Minutes),
-                    mapPriority timeSlot.Priority) ]
-        | _ -> None
+            (startTime.Hours, startTime.Minutes), (endTime.Hours, endTime.Minutes)
 
-    (dayOfWeekSlot, timeSlotList)
+        | _ -> ((9, 30), (18, 45))
+
+    ((dayOfWeekSlot, timeSlot), priority)
 
 let mapGeneralPreference
     (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>)
@@ -229,7 +201,6 @@ let mapTeacher
     (teacherDict: IDictionary<int, TeacherPreferencesDataModel.Teacher>)
     (teacher: TeacherPreferencesDataModel.Teacher)
     : Teacher =
-    let department = mapDepartment teacher.Department
 
     let generalPreferences =
         teacher.GeneralPreferences
@@ -254,7 +225,7 @@ let mapTeacher
         { Name = teacher.Name
           Surname = teacher.Surname
           Patronymic = Some(teacher.Patronymic) }
-      Department = department
+      Department = teacher.DepartmentId
       Preferences =
         generalPreferences
         @ specificPreferences @ timePreferences }

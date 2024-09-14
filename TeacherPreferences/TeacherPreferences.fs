@@ -7,7 +7,7 @@ type Priority =
     | NotDesirable
     | Avoidable
 
-type DayOfWeek =
+type DayOfWeekSlot =
     | Monday
     | Tuesday
     | Wednesday
@@ -26,30 +26,7 @@ type AudienceEquipment =
     | Capacity of int
     | Blackboard
 
-type Department =
-    | Astronomy
-    | Astrophysics
-    | Algebra
-    | Geometry
-    | ComputationalMathematics
-    | DifferentialEquations
-    | Informatics
-    | InformationAndAnalyticalSystems
-    | Hydroaeromechanics
-    | OperationsResearch
-    | MathematicalAnalysis
-    | MathematicalPhysics
-    | CelestialMechanics
-    | ParallelAlgorithms
-    | AppliedCybernetics
-    | SystemProgramming
-    | StatisticalModeling
-    | TheoreticalAndAppliedMechanics
-    | TheoreticalCybernetics
-    | ProbabilityTheoryAndMathematicalStatistics
-    | PhysicalMechanics
-    | ForeignLanguages
-    | TheoryOfElasticity
+type Department = int
 
 type ClassType =
     | Lecture
@@ -64,9 +41,8 @@ type EndTime = HoursAndMinutes
 
 type Group = string
 type Subject = string
-type TimeSlot = StartTime * EndTime * Priority
-type DayOfWeekSlot = DayOfWeek * Priority
-type Time = DayOfWeekSlot option * TimeSlot list option
+type TimeSlot = StartTime * EndTime
+type Time = (DayOfWeekSlot * TimeSlot) * Priority
 
 type SpecificPreference =
     | Audience of int * Priority

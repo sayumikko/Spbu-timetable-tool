@@ -1,29 +1,30 @@
 ﻿using System.Windows;
 using TeacherPreferencesUI.ViewModels;
-using TeacherPreferencesDataModel;
 
 namespace TeacherPreferencesUI.Windows
 {
-    /// <summary>
-    /// Логика взаимодействия для AddTeacherWindow.xaml
-    /// </summary>
     public partial class AddTeacherWindow : Window
     {
-        public TeacherViewModel teacher { get; private set; }
-        public AddTeacherWindow(TeacherViewModel teacher)
+        public ApplicationViewModel AppViewModel { get; private set; }
+
+        public AddTeacherWindow(ApplicationViewModel appViewModel, TeacherViewModel teacher)
         {
             InitializeComponent();
-            this.teacher = teacher;
-            DataContext = this.teacher;
+            this.AppViewModel = appViewModel;
+
+            // Устанавливаем редактируемого преподавателя
+            AppViewModel.EditingTeacher = teacher;
+            DataContext = AppViewModel;
         }
 
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = (TeacherViewModel)DataContext;
+            var teacher = AppViewModel.EditingTeacher;
 
-            if (string.IsNullOrWhiteSpace(viewModel.Surname) ||
-                string.IsNullOrWhiteSpace(viewModel.Name) ||
-                viewModel.Department == default)
+            if (teacher == null ||
+                string.IsNullOrWhiteSpace(teacher.Surname) ||
+                string.IsNullOrWhiteSpace(teacher.Name) ||
+                teacher.Department == null)
             {
                 MessageBox.Show("Пожалуйста, заполните все обязательные поля (Фамилия, Имя и Кафедра).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

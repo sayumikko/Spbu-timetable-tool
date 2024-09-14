@@ -6,7 +6,6 @@
         Title="MainWindow" Height="600" Width="1000">
 
     <Window.Resources>
-        <conv:DepartmentConverter x:Key="DepartmentConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <conv:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     </Window.Resources>
@@ -43,8 +42,8 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding FullName}"/>
-                                <TextBlock Text="{Binding Department, Converter={StaticResource DepartmentConverter}}"/>
+                                <TextBlock FontWeight="SemiBold" Text="{Binding FullName}"/>
+                                <TextBlock Text="{Binding Department.Name}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -56,10 +55,19 @@
             <Border Background="#F2E8C9" Grid.Row="2" Height="40">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Style="{StaticResource RoundedButton}" 
-                        Content="Добавить преподавателя" 
+                        Content="Добавить" 
                         Command="{Binding AddCommand}" 
-                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" 
-                        MinWidth="100"/>
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                    <Button Style="{StaticResource RoundedButton}" 
+                        Content="Очистить" 
+                        Command="{Binding ClearAllTeachersCommand}" 
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                    <Button Style="{StaticResource RoundedButton}" 
+                        Content="Загрузить" 
+                        Command="{Binding LoadAcademicLoadCommand}" 
+                        Visibility="{Binding IsTeacherSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
 
                     <Button Style="{StaticResource RoundedButton}" 
                         Content="Удалить" 

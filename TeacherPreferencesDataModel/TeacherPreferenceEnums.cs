@@ -34,34 +34,6 @@ namespace TeacherPreferencesDataModel
         Blackboard
     }
 
-    public enum Department
-    {
-        None,
-        Astronomy,
-        Astrophysics,
-        Algebra,
-        Geometry,
-        ComputationalMathematics,
-        DifferentialEquations,
-        Informatics,
-        InformationAndAnalyticalSystems,
-        Hydroaeromechanics,
-        OperationsResearch,
-        MathematicalAnalysis,
-        MathematicalPhysics,
-        CelestialMechanics,
-        ParallelAlgorithms,
-        AppliedCybernetics,
-        SystemProgramming,
-        StatisticalModeling,
-        TheoreticalAndAppliedMechanics,
-        TheoreticalCybernetics,
-        ProbabilityTheoryAndMathematicalStatistics,
-        PhysicalMechanics,
-        ForeignLanguages,
-        TheoryOfElasticity
-    }
-
     public enum ClassType
     {
         Lecture,

@@ -88,7 +88,7 @@ namespace TeacherPreferencesUI.ViewModels
             }
         }
 
-        public string FullName => $"{Surname} {Name} {Patronymic}".Trim();
+        public string FullName => $"{Surname} {Name[0]}. {(Patronymic != null ? $"{Patronymic[0]}." : "")}".Trim();
 
         public static TeacherViewModel FromModel(Teacher teacher, ApplicationViewModel appViewModel)
         {

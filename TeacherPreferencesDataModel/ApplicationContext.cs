@@ -11,6 +11,7 @@ namespace TeacherPreferencesDataModel
         public DbSet<Audience> Audiences { get; set; }
         public DbSet<AudienceEquipment> AudienceEquipments { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,6 +55,11 @@ namespace TeacherPreferencesDataModel
                 .WithOne(ts => ts.Teacher)
                 .HasForeignKey(ts => ts.TeacherId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Teacher>()
+                .HasOne(t => t.Department)
+                .WithMany(d => d.Teachers)
+                .HasForeignKey(t => t.DepartmentId);
         }
     }
 }

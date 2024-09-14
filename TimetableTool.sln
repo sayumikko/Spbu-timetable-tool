@@ -11,7 +11,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "TeacherPreferences", "Teach
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherPreferencesUI", "TeacherPreferencesUI\TeacherPreferencesUI.csproj", "{871A2527-CDEB-4021-943F-F7A02967DCA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherPreferencesDataModel", "TeacherPreferencesDataModel\TeacherPreferencesDataModel.csproj", "{AD0B8435-F85C-4B9B-9A32-01864238A88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherPreferencesDataModel", "TeacherPreferencesDataModel\TeacherPreferencesDataModel.csproj", "{AD0B8435-F85C-4B9B-9A32-01864238A88C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ValidationUnitTests", "ValidationUnitTests\ValidationUnitTests.fsproj", "{D8799B2B-E14F-4390-86C8-74F500525400}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AD0B8435-F85C-4B9B-9A32-01864238A88C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD0B8435-F85C-4B9B-9A32-01864238A88C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD0B8435-F85C-4B9B-9A32-01864238A88C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8799B2B-E14F-4390-86C8-74F500525400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8799B2B-E14F-4390-86C8-74F500525400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8799B2B-E14F-4390-86C8-74F500525400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8799B2B-E14F-4390-86C8-74F500525400}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
