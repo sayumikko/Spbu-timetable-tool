@@ -1,0 +1,46 @@
+﻿<Window x:Class="TeacherPreferencesUI.Windows.AddTeacherWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:TeacherPreferencesUI.Converters"
+        Title="AddTeacherWindow" Height="265" Width="400" ResizeMode="NoResize">
+
+    <Grid Background="#F6EFD7">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="1" FontWeight="DemiBold" Text="Введите данные преподавателя" HorizontalAlignment="Center" Margin="10"/>
+
+        <TextBlock Text="Фамилия" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        <TextBox Grid.ColumnSpan="2" Text="{Binding EditingTeacher.Surname}" Grid.Row="1" Grid.Column="1" Margin="10"/>
+
+        <TextBlock Text="Имя" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        <TextBox Grid.ColumnSpan="2" Text="{Binding EditingTeacher.Name}" Grid.Row="2" Grid.Column="1" Margin="10"/>
+
+        <TextBlock Text="Отчество" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        <TextBox Grid.ColumnSpan="2" Text="{Binding EditingTeacher.Patronymic}" Grid.Row="3" Grid.Column="1" Margin="10"/>
+
+        <TextBlock Text="Кафедра" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+
+        <ComboBox Grid.ColumnSpan="2" Grid.Row="4" Grid.Column="1"
+          SelectedItem="{Binding EditingTeacher.Department, Mode=TwoWay}"
+          ItemsSource="{Binding Departments}"
+          DisplayMemberPath="Name"
+          Margin="10" />
+
+        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource RoundedButton}" Click="Accept_Click"  Content="Сохранить"></Button>
+        <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource RoundedButton}" IsCancel="True" Content="Назад"></Button>
+    </Grid>
+</Window>
