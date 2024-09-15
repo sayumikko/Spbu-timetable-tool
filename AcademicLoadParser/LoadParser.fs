@@ -191,9 +191,7 @@ let readExcelFile (workbook: XSSFWorkbook) =
                 try
                     parseCourse row
                 with
-                | _ as ex ->
-                    printfn "Ошибка в строке %d: %s" rowIndex ex.Message
-                    exit -2
+                | _ as ex -> raise ex
 
             match course.CourseCode with
             | "900000" -> courses <- courses

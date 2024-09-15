@@ -9,6 +9,7 @@ using static ExcelTimetableParser.TimetableParser;
 using static LoadParser;
 using MathNet.Numerics.LinearAlgebra.Solvers;
 using TeacherPreferencesDataModel;
+using System.Windows;
 
 namespace TeacherPreferencesUI.ViewModels
 {
@@ -77,56 +78,65 @@ namespace TeacherPreferencesUI.ViewModels
                 if (openFileDialog.ShowDialog() == true)
                 {
                     string filePath = openFileDialog.FileName;
-                    var result = parseAcademicLoadTeachers(filePath);
 
-                    foreach (var (teacherName, departmentName, courseName, activityType, groups) in result)
+                    try
                     {
-                        var department = viewModel.db.Departments.FirstOrDefault(d => d.Name == departmentName);
-                        if (department == null)
-                        {
-                            department = new Department { Name = departmentName };
-                            viewModel.db.Departments.Add(department);
-                            viewModel.db.SaveChanges();
-                            viewModel.Departments.Add(department);
-                        }
 
-                        var nameParts = teacherName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                        string surname = nameParts[0];
-                        string name = nameParts.Length > 1 ? nameParts[1] : "";
-                        string patronymic = nameParts.Length > 2 ? nameParts[2] : null;
+                        var result = parseAcademicLoadTeachers(filePath);
 
-                        var teacher = viewModel.db.Teachers.FirstOrDefault(t => t.Name == name && t.Surname == surname && t.Patronymic == patronymic);
-                        if (teacher == null)
+                        foreach (var (teacherName, departmentName, courseName, activityType, groups) in result)
                         {
-                            teacher = new Teacher
+                            var department = viewModel.db.Departments.FirstOrDefault(d => d.Name == departmentName);
+                            if (department == null)
                             {
-                                Name = name,
-                                Surname = surname,
-                                Patronymic = patronymic,
-                                DepartmentId = department.DepartmentId,
-                                Department = department
-                            };
-                            viewModel.db.Teachers.Add(teacher);
-                            viewModel.db.SaveChanges();
+                                department = new Department { Name = departmentName };
+                                viewModel.db.Departments.Add(department);
+                                viewModel.db.SaveChanges();
+                                viewModel.Departments.Add(department);
+                            }
 
-                            viewModel.Teachers.Add(TeacherViewModel.FromModel(teacher, viewModel));
-                        }
+                            var nameParts = teacherName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            string surname = nameParts[0];
+                            string name = nameParts.Length > 1 ? nameParts[1] : "";
+                            string patronymic = nameParts.Length > 2 ? nameParts[2] : null;
 
-                        foreach (var group in groups)
-                        {
-                            var course = new TeacherPreferencesDataModel.Course
+                            var teacher = viewModel.db.Teachers.FirstOrDefault(t => t.Name == name && t.Surname == surname && t.Patronymic == patronymic);
+                            if (teacher == null)
                             {
-                                Group = group,
-                                SubjectName = courseName,
-                                ClassType = ClassType.Practical,
-                                TeacherId = teacher.Id,
-                                Teacher = teacher
-                            };
-                            viewModel.db.Courses.Add(course);
-                            viewModel.db.SaveChanges();
+                                teacher = new Teacher
+                                {
+                                    Name = name,
+                                    Surname = surname,
+                                    Patronymic = patronymic,
+                                    DepartmentId = department.DepartmentId,
+                                    Department = department
+                                };
+                                viewModel.db.Teachers.Add(teacher);
+                                viewModel.db.SaveChanges();
 
-                            viewModel.Courses.Add(CourseViewModel.FromModel(course));
+                                viewModel.Teachers.Add(TeacherViewModel.FromModel(teacher, viewModel));
+                            }
+
+                            foreach (var group in groups)
+                            {
+                                var course = new TeacherPreferencesDataModel.Course
+                                {
+                                    Group = group,
+                                    SubjectName = courseName,
+                                    ClassType = ClassType.Practical,
+                                    TeacherId = teacher.Id,
+                                    Teacher = teacher
+                                };
+                                viewModel.db.Courses.Add(course);
+                                viewModel.db.SaveChanges();
+
+                                viewModel.Courses.Add(CourseViewModel.FromModel(course));
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Данный файл не является корректным файлом педагогической нагрузки.");
                     }
                 }
             });

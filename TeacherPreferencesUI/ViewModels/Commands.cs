@@ -34,8 +34,6 @@ namespace TeacherPreferencesUI.ViewModels
             });
         }
 
-
-
         public static RelayCommand DeleteCommand(ApplicationViewModel viewModel)
         {
             return new RelayCommand((o) =>
@@ -64,7 +62,6 @@ namespace TeacherPreferencesUI.ViewModels
             {
                 if (MessageBox.Show("Вы уверены, что хотите очистить список преподавателей?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    // Очистка списка
                     viewModel.Teachers.Clear();
                     viewModel.db.Teachers.RemoveRange(viewModel.db.Teachers);
                     viewModel.db.SaveChanges();
