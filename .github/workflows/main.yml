@@ -40,6 +40,9 @@ jobs:
     - name: Run Tests
       run: dotnet test --no-build --verbosity normal
 
+    - name: Publish application
+      run: dotnet publish -c Release -o ./output
+      
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
